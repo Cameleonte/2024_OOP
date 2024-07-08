@@ -13,7 +13,7 @@ class Mammal:
     def get_kingdom(self) -> str:
         return self.__kingdom
 
-    def info(self):
+    def info(self) -> str:
         return f"{self.name} is of type {self.type}"
 
 
