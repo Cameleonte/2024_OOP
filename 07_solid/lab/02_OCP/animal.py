@@ -6,6 +6,27 @@ class Animal:
         return self.species
 
 
+class Cat(Animal):
+
+    @staticmethod
+    def make_sound():
+        return "Meow"
+
+
+class Dog(Animal):
+
+    @staticmethod
+    def make_sound():
+        return "Bau"
+
+
+class Chicken(Animal):
+
+    @staticmethod
+    def make_sound():
+        return "Pi"
+
+
 def animal_sound(animals: list):
     for animal in animals:
         if animal.species == 'cat':
