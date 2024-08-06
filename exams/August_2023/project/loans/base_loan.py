@@ -6,5 +6,6 @@ class BaseLoan(ABC):
         self.interest_rate = interest_rate
         self.amount = amount
 
+    @abstractmethod
     def increase_interest_rate(self):
         pass
