@@ -33,7 +33,7 @@ class BankApp:
         return f"{loan_type} was successfully added."
 
     def add_client(self, client_type: str, client_name: str, client_id: str, income: float):
-        if not self.VALID_CLIENT_TYPES.get(client_type):
+        if self.VALID_CLIENT_TYPES.get(client_type) is None:
             raise Exception("Invalid client type!")
         if len(self.clients) >= self.capacity:
             return "Not enough bank capacity."
@@ -57,52 +57,46 @@ class BankApp:
 
     def remove_client(self, client_id: str):
         client = self._get_client(client_id)
-        try:
-            self.clients.remove(client)
-            if client.loans:
-                return "The client has loans! Removal is impossible!"
-            return f"Successfully removed {client.name} with ID {client_id}."
-        except ValueError:
-            return "No such client!"
+        self.clients.remove(client)
+        if client.loans:
+            return "The client has loans! Removal is impossible!"
+        return f"Successfully removed {client.name} with ID {client_id}."
 
     def increase_loan_interest(self, loan_type: str):
-        counter = 0
+        number_of_changed_loans = 0
         for curr_loan in self.loans:
             if curr_loan.__class__.__name__ == loan_type:
-                counter += 1
+                number_of_changed_loans += 1
                 BaseLoan.increase_interest_rate(curr_loan)
-            return f"Successfully changed {counter} loans."
+        return f"Successfully changed {number_of_changed_loans} loans."
 
     def increase_clients_interest(self, min_rate: float):
-        counter = 0
+        number_client_interests_changed = 0
         lst_with_clients_min_interest = [cl for cl in self.clients if cl.interest < min_rate]
         for curr_client in lst_with_clients_min_interest:
-            counter += 1
+            number_client_interests_changed += 1
             curr_client.increase_clients_interest()
-        return f"Number of clients affected: {counter}."
+        return f"Number of clients affected: {number_client_interests_changed}."
 
     def get_statistics(self):
         total_clients_income = sum(client.income for client in self.clients)
 
-        list_clients_with_loans = [client for client in self.clients if client.loans]
-        loans_count_granted_to_clients = sum([len(loan.loans) for loan in list_clients_with_loans])
-        list_loans_granted_to_clients = [client.loans for client in list_clients_with_loans]
-        granted_sum = sum([sum([loan.amount for loan in lst_loans]) for lst_loans in list_loans_granted_to_clients])
+        loans_count_granted_to_clients = sum([len(client.loans) for client in self.clients if client.loans])
+        granted_sum = sum([loan.amount for c in self.clients for loan in c.loans])
 
         loans_count_not_granted = len(self.loans)
         tot_sum_not_granted_loans = sum(loan.amount for loan in self.loans)
-        not_granted_sum = loans_count_not_granted * tot_sum_not_granted_loans
 
-        sum_rates = sum([client.get_new_interest() for client in self.clients])
+        sum_rates = sum([client.interest for client in self.clients])
         try:
             avg_client_interest_rate = sum_rates / len(self.clients)
         except ZeroDivisionError:
-            return "Don't have any bank clients!"
+            avg_client_interest_rate = 0
 
         return f"Active Clients: {len(self.clients)}\n" \
                f"Total Income: {total_clients_income:.2f}\n" \
                f"Granted Loans: {loans_count_granted_to_clients}, Total Sum: {granted_sum:.2f}\n" \
-               f"Available Loans: {loans_count_not_granted}, Total Sum: {not_granted_sum:.2f}\n" \
+               f"Available Loans: {loans_count_not_granted}, Total Sum: {tot_sum_not_granted_loans:.2f}\n" \
                f"Average Client Interest Rate: {avg_client_interest_rate:.2f}"
 
     def _get_client(self, client_id):
@@ -110,4 +104,4 @@ class BankApp:
             client = [c for c in self.clients if c.client_id == client_id][0]
             return client
         except IndexError:
-            return "No such client!"
+            raise Exception("No such client!")

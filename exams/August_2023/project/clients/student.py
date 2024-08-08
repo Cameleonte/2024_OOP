@@ -8,5 +8,5 @@ class Student(BaseClient):
         super().__init__(name, client_id, income, self.STUDENT_INITIAL_INTEREST)
 
     def get_new_interest(self):
-        new_student_interest = self.STUDENT_INITIAL_INTEREST + self.STUDENT_INITIAL_INTEREST * 0.1
+        new_student_interest = self.STUDENT_INITIAL_INTEREST + 1
         return new_student_interest

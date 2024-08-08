@@ -44,9 +44,9 @@ class BaseClient(ABC):
     
     @income.setter
     def income(self, value):
-        if value <= 0:
+        if value <= 0.0:
             raise ValueError("Income must be greater than zero!")
         self.__income = value
 
     def increase_clients_interest(self):
-        return self.get_new_interest()
+        self.interest = self.get_new_interest

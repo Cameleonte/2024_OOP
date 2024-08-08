@@ -8,5 +8,5 @@ class MortgageLoan(BaseLoan):
     def __init__(self):
         super().__init__(self.MORTGAGE_INTEREST_RATE, self.MORTGAGE_LOAN_AMOUNT)
 
-    def increase_interest_rate(self) -> float:
-        return self.MORTGAGE_INTEREST_RATE * 0.5
+    def increase_interest_rate(self) -> None:
+        self.interest_rate += 0.5

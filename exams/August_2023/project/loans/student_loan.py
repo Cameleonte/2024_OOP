@@ -8,5 +8,5 @@ class StudentLoan(BaseLoan):
     def __init__(self):
         super().__init__(self.STUDENTS_INTEREST_RATE, self.STUDENTS_LOAN_AMOUNT)
 
-    def increase_interest_rate(self) -> float:
-        return self.STUDENTS_INTEREST_RATE * 0.2
+    def increase_interest_rate(self) -> None:
+        self.interest_rate += 0.2
